@@ -53,7 +53,7 @@
                     <?php if ($droitDeModificationMajeur) { ?>
                         <div class="mb-3">
                             <label class="form-label">Habilitation</label>
-                            <select name="Habilitation" id="Habilitation" class="form-control">
+                            <select name="habilitation" id="habilitation" class="form-control">
                             <?php foreach ($habilitationsSubordonner as $habilitation) { ?>
                             <option value="<?php echo $habilitation[0] ?>" <?php echo (isset($info["habilitation"]) && $info["habilitation"] == $habilitation[1])? "selected" : "" ?>><?php echo htmlspecialchars($habilitation[1])  ?></option>
                             <?php } ?>

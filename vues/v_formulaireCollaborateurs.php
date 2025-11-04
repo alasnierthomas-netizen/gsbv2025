@@ -22,7 +22,6 @@
                         <option value class="text-center">- Choisissez un collaborateur -</option>
                         <?php
                         foreach ($collaborateurs as $collaborateur) {
-                            var_dump($collaborateur);
                             $value = htmlspecialchars($collaborateur['COL_MATRICULE']);
                             $label = htmlspecialchars($collaborateur['COL_NOM'] . ' - ' . $collaborateur['COL_PRENOM']);
                             echo '<option value="' . $value . '" class="form-control">' . $label . '</option>';

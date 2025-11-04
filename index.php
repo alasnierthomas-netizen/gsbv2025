@@ -63,7 +63,7 @@
         }
 
         case "collaborateur": {
-            if (empty($_SESSION['login']) || (getDroit($_SESSION['login']) != 2 && getDroit($_SESSION['login']) != 3)) { // acesse interdit
+            if (empty($_SESSION['login']) || (getDroit($_SESSION['login']) != 3)) { // acesse interdit
                 include("vues/v_accesInterdit.php");
             }
             else { // accese autorisé

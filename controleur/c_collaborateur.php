@@ -23,7 +23,7 @@ switch ($action) {
 		if (isset($_REQUEST["matricule"]) && getAllInformationCompte($_REQUEST["matricule"]) != false) { // si on a indiquer un matricule et que se matricule est correcte
 
 			$info = getAllInformationCompte($_REQUEST["matricule"]);
-			$habilitationsSubordonner = getAllHabilitationSubordonner($_SESSION["habilitation"]);
+			$habilitationsSubordonner = getAllHabilitationSubordonnerOuEgal($_SESSION["habilitation"]);
 			$regions = getAllRegion();
 			//$region = getRegionDuSecteur($info['secteur']);
 
@@ -33,7 +33,7 @@ switch ($action) {
 			}
 			else { //modifier un autre collaborateur
 				$infoPersonnelle = false;
-				$droitDeModificationMajeur = superieur($_SESSION['habilitation'], $info['libeleID']);
+				$droitDeModificationMajeur = superieurOuEgal($_SESSION['habilitation'], $info['libeleID']);
 			}
 
 			if (!$droitDeModificationMajeur && !$infoPersonnelle) {
@@ -49,17 +49,43 @@ switch ($action) {
 		}
 		break;
 	}
-	case 'confirmeModifier': //TODO thomas: réaliser une baterie de test pour cette fonctionnalité et rendre visible/beaux les message d'erreur/succes
+	case 'confirmeModifier': //TODO thomas: rajouter des regex
 	{
-		if (isset(($_SESSION['login']))) //test si l'utilisateur est connecté
+		$habilitaionVide = empty($_REQUEST['habilitation']);
+		if (isset(($_SESSION['habilitation']) )) //test si l'utilisateur est connecté
 		{
-			if (isset($_REQUEST['Habilitation']) && superieur( $_SESSION['habilitation'], $_REQUEST['Habilitation'])) //test si l'utilisateur ne donne pas des droit supérieur au sien
+		if ($habilitaionVide || superieurOuEgal( $_SESSION['habilitation'], $_REQUEST['habilitation'])) //test si l'utilisateur ne donne pas des droit supérieur au sien
 			{
 				if (isset($_REQUEST['matricule'])) // test si le matricule est bien présent
 				{
-					if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '' && isset($_REQUEST['Habilitation']) && isset($_REQUEST['region'])) // test si tout les champs sont bien présent
+					if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '' && isset($_REQUEST['region'])) // test si tout les champs sont bien présent
 					{
-						$modificationReussi = modifierCollaborateur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['Habilitation'], $_REQUEST['region']);
+						if ($habilitaionVide)
+						{
+							$modificationReussi = modifierCollaborateurSansHabilitation($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['region']);
+						}
+						else
+						{
+							if ($_REQUEST['habilitation'] == 3)
+							{
+								if (secteurOccuper(getSecteurDeLaRegion($_REQUEST['region']), $_REQUEST['matricule']))
+								{
+									header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Le secteur est déjà occupée par un autre responsable de secteur.') . '&matricule=' . urlencode($_REQUEST['matricule']));
+									exit();
+								}
+								else
+								{
+									$modificationReussi = modifierCollaborateurResponsableSecteur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['habilitation'], $_REQUEST['region']);
+								}
+
+							}
+							else
+							{
+								$modificationReussi = modifierCollaborateur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['habilitation'], $_REQUEST['region']);
+
+							}
+							
+						}
 						if ($modificationReussi) {
 							header('Location: index.php?uc=collaborateur&action=afficher&success=' . urlencode('Les modifications ont bien été prises en compte.') . '&collaborateur=' . urlencode($_REQUEST['matricule']));
 							exit();
