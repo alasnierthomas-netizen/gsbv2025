@@ -5,9 +5,9 @@
             <p class="text text-center">
                 <?php echo (isset($infoPersonnelle) && $infoPersonnelle) ? "Modification de vos informations personnelles." : "Modification des informations du collaborateur."; ?>
             </p>
-            <p class="text text-center">
-                <?php echo (isset($_REQUEST["erreur"]))? $_REQUEST["erreur"] : "" ?>
-            </p>
+            <?php if (isset($_REQUEST["erreur"])) {
+                echo '<p class="alert alert-danger text-center w-100">' . $_REQUEST["erreur"] . '</p>';
+            } ?>
         </div>
 
         <div class="row align-items-center justify-content-center">

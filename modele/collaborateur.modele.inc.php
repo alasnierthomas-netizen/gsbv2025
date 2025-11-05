@@ -154,7 +154,7 @@ include_once 'bd.inc.php';
         try {
             var_dump($secteur);
             $monPdo = connexionPDO();
-            $req = $monPdo->prepare('SELECT COL_MATRICULE FROM collaborateur JOIN region ON collaborateur.REG_CODE = region.REG_CODE WHERE HAB_ID = 3 && region.SEC_CODE = ? && COL_MATRICULE != ?');
+            $req = $monPdo->prepare('SELECT COL_MATRICULE FROM collaborateur WHERE HAB_ID = 3 && SEC_CODE = ? && COL_MATRICULE != ?');
             $req->execute([$secteur, $matriculeIgnorer]);
             $res = $req->fetchAll();
             return (count($res) > 0); // Return true if there are collaborators with HAB_ID = 2

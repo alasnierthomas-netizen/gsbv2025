@@ -28,7 +28,7 @@
                             <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=accueil">Accueil</a>
                         </li>
                         <?php
-                        if ( !empty($_SESSION['habilitation']) && ($_SESSION['habilitation'] == 2 || $_SESSION['habilitation'] == 3) ){
+                        if ( !empty($_SESSION['habilitation']) && $_SESSION['habilitation'] == 3){
                             ?>
 
                             <li class="nav-item ">
