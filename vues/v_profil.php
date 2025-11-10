@@ -5,7 +5,7 @@
         <div class="structure-hero pt-lg-5 pt-4">
             <h1 class="titre text-center">Profil</h1>
             <p class="text text-center">
-                <?php echo (isset($infoNonPersonnelle))? "informations du collaborateur : " . $info[1] . " " . $info[2] : "informations personnelles."; ?>
+                <?php echo (isset($infoNonPersonnelle) && $infoNonPersonnelle)? "informations du collaborateur : " . $info[1] . " " . $info[2] : "informations personnelles."; ?>
             </p>
         </div>
         <div class="row align-items-center justify-content-center">
@@ -26,7 +26,7 @@
                     <p><span class="carac">Secteur</span> : <?php echo htmlspecialchars($info[8]) ?></p>
                     <p><span class="carac">Région</span> : <?php echo htmlspecialchars($info[9]) ?></p>
 
-                <?php if (!isset($infoNonPersonnelle) || (isset($droitDeModificationMajeur) && $droitDeModificationMajeur)) { ?>
+                <?php if ((!isset($infoNonPersonnelle) && $infoNonPersonnelle) || (isset($droitDeModificationMajeur) && $droitDeModificationMajeur)) { ?>
                     <a href="index.php?uc=collaborateur&action=modifier&matricule=<?php echo htmlspecialchars($info[0]);?>">
                     <button class="btn btn-info text-light valider" type="submit" >modfifier</button>
                     </a>

@@ -15,6 +15,7 @@ switch ($action) {
 	case "afficher":
 	{
 		$info = getAllInformationCompte($_REQUEST["collaborateur"]);
+		$infoNonPersonnelle = $_SESSION["matricule"] == $info["matricule"] ? false : true;
 		include("vues/v_profil.php");
 		break;
 	}
