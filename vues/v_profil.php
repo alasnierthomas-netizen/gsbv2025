@@ -26,7 +26,7 @@
                     <p><span class="carac">Secteur</span> : <?php echo htmlspecialchars($info[8]) ?></p>
                     <p><span class="carac">Région</span> : <?php echo htmlspecialchars($info[9]) ?></p>
 
-                <?php if ((!isset($infoNonPersonnelle) && $infoNonPersonnelle) || (isset($droitDeModificationMajeur) && $droitDeModificationMajeur)) { ?>
+                <?php if (getDroit($_SESSION['login']) == 3) { ?>
                     <a href="index.php?uc=collaborateur&action=modifier&matricule=<?php echo htmlspecialchars($info[0]);?>">
                     <button class="btn btn-info text-light valider" type="submit" >modfifier</button>
                     </a>

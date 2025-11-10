@@ -34,15 +34,9 @@ switch ($action) {
 			}
 			else { //modifier un autre collaborateur
 				$infoPersonnelle = false;
-				$droitDeModificationMajeur = superieurOuEgal($_SESSION['habilitation'], $info['libeleID']);
+				$droitDeModificationMajeur = true;
 			}
-
-			if (!$droitDeModificationMajeur && !$infoPersonnelle) {
-				include("vues/v_accesInterdit.php");
-			}
-			else {
-				include("vues/formulaireModificationCollaborateur.php");
-			}
+			include("vues/formulaireModificationCollaborateur.php");
 		}
 		else{
 			header('Location: index.php');
