@@ -3,6 +3,8 @@
 
     require_once('modele/collaborateur.modele.inc.php');
 
+    require_once('modele/rapportVisite.modele.inc.php');
+
     require_once('modele/connexion.modele.inc.php');
 
 
