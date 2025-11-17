@@ -41,28 +41,11 @@
             break;
         }
 
-        case 'praticiens': {  // Si uc=praticiens
-
-            if (!empty($_SESSION['login'])) {  // Si l'utilisateur est connecté
-                include("controleur/c_praticiens.php");
-            }
-            
-            else {  // Si l'utilisateur n'est pas connecté
-                include("vues/v_accesInterdit.php");
-            }
-
-            break;
-        }
-
         case 'connexion': {
             include("controleur/c_connexion.php");
             break;
         }
 
-        case 'rapportdevisite': {
-            include("controleur/c_rapportVisite.php");
-            break;
-        }
 
         case "collaborateur": {
             if (empty($_SESSION['login']) || (getDroit($_SESSION['login']) != 3)) { // acesse interdit

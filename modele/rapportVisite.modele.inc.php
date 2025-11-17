@@ -1,20 +1,6 @@
 <?php
 require_once 'modele/bd.inc.php';
 
-/**
- * Récupère tous les praticiens (pour la liste déroulante)
- */
-/*
-function getAllPraticiens() {
-    $pdo = connexionPDO();
-    $req = "SELECT PRA_NUM, CONCAT(PRA_PRENOM, ' ', PRA_NOM) AS nomComplet
-            FROM praticien
-            ORDER BY PRA_NOM";
-    $stmt = $pdo->query($req);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-*/
-
 function getMotif() {
     try {
         $monPdo = connexionPDO();
