@@ -71,6 +71,15 @@
             }
             break;
         }
+        case "secteur": {
+            if (empty($_SESSION['login'])  || (getDroit($_SESSION['login']) != 3)) { // acesse interdit
+                include("vues/v_accesInterdit.php");
+            }
+            else { // accese autorisé
+                include("controleur/c_secteur.php");
+            }
+            break;
+        }
 
         default: {
 
