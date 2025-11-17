@@ -30,6 +30,9 @@
                         <?php
                         if ( !empty($_SESSION['habilitation']) && $_SESSION['habilitation'] == 3){
                             ?>
+                            <li class="nav-item ">
+                                <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=rapportdevisite&action=mesrapports">Historique De Rapport</a>
+                            </li>
 
                             <li class="nav-item ">
                                 <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=collaborateur&action=listCollaborateurs">Gérer les collaborateur</a>
