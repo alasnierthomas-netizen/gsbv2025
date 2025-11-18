@@ -72,6 +72,22 @@ include_once 'bd.inc.php';
         }
     }
 
+    function getHabilitation($matricule): array{
+        try
+        {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('SELECT HAB_ID FROM collaborateur WHERE collaborateur.COL_MATRICULE = ?');
+            $req->execute([$matricule]);
+            $res = $req->fetch();
+            return $res;
+        } 
+    
+        catch (PDOException $e){
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
     function getAllRegion(): array{
         try
         {
@@ -115,7 +131,7 @@ include_once 'bd.inc.php';
     function modifierCollaborateurSansHabilitation($matricule, $nom, $prenom, $rue, $code_postal, $ville, $date_embauche, $region): bool {
         try {
             $monPdo = connexionPDO();
-            $req = $monPdo->prepare('UPDATE collaborateur SET COL_NOM = ?, COL_PRENOM = ?, COL_ADRESSE = ?, COL_CP = ?, COL_VILLE = ?, COL_DATEEMBAUCHE = ?, REG_CODE = ?, SEC_CODE = NULL  WHERE COL_MATRICULE = ?');
+            $req = $monPdo->prepare('UPDATE collaborateur SET COL_NOM = ?, COL_PRENOM = ?, COL_ADRESSE = ?, COL_CP = ?, COL_VILLE = ?, COL_DATEEMBAUCHE = ?, REG_CODE = ? WHERE COL_MATRICULE = ?');
             $res = $req->execute([$nom, $prenom, $rue, $code_postal, $ville, $date_embauche, $region, $matricule]);
             return $res;
         } catch (PDOException $e) {
@@ -152,7 +168,6 @@ include_once 'bd.inc.php';
 
     function secteurOccuper ($secteur, $matriculeIgnorer): bool {
         try {
-            var_dump($secteur);
             $monPdo = connexionPDO();
             $req = $monPdo->prepare('SELECT COL_MATRICULE FROM collaborateur WHERE HAB_ID = 3 && SEC_CODE = ? && COL_MATRICULE != ?');
             $req->execute([$secteur, $matriculeIgnorer]);
@@ -212,5 +227,20 @@ function superieur(string $hab_user, string $hab_segond): bool //toute modificat
             }
         }
         return $result;
+    }
+
+    function getSecteur($matricule): array {
+        try {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('SELECT secteur.SEC_CODE, secteur.sec_libelle  FROM collaborateur
+                                    JOIN secteur ON secteur.SEC_CODE = collaborateur.SEC_CODE
+                                    WHERE COL_MATRICULE = ?');
+            $req->execute([$matricule]);
+            $res = $req->fetch();
+            return $res;
+        } catch (PDOException $e) {
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
     }
 ?>

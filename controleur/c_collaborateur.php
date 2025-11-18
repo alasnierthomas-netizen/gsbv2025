@@ -57,30 +57,28 @@ switch ($action) {
 					{
 						if ($habilitaionVide)
 						{
-							$modificationReussi = modifierCollaborateurSansHabilitation($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['region']);
+							$habilitation = getHabilitation($_REQUEST['matricule']);
 						}
-						else
+						if (($habilitaionVide)? $habilitation = 3 : $_REQUEST['habilitation'] == 3)
 						{
-							if ($_REQUEST['habilitation'] == 3)
+							if (secteurOccuper(getSecteurDeLaRegion($_REQUEST['region']), $_REQUEST['matricule']))
 							{
-								if (secteurOccuper(getSecteurDeLaRegion($_REQUEST['region']), $_REQUEST['matricule']))
-								{
-									header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Le secteur est déjà occupée par un autre responsable de secteur.') . '&matricule=' . urlencode($_REQUEST['matricule']));
-									exit();
-								}
-								else
-								{
-									$modificationReussi = modifierCollaborateurResponsableSecteur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['habilitation'], $_REQUEST['region']);
-								}
-
+								header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Le secteur est déjà occupée par un autre responsable de secteur.') . '&matricule=' . urlencode($_REQUEST['matricule']));
+								exit();
 							}
 							else
 							{
-								$modificationReussi = modifierCollaborateur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], $_REQUEST['habilitation'], $_REQUEST['region']);
-
+								$modificationReussi = modifierCollaborateurResponsableSecteur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], ($habilitaionVide)? $habilitation : $_REQUEST['habilitation'], $_REQUEST['region']);
 							}
-							
+
 						}
+						else
+						{
+							$modificationReussi = modifierCollaborateur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $_REQUEST['code_postal'], $_REQUEST['ville'], $_REQUEST['date_embauche'], ($habilitaionVide)? $habilitation : $_REQUEST['habilitation'], $_REQUEST['region']);
+
+						}
+							
+
 						if ($modificationReussi) {
 							header('Location: index.php?uc=collaborateur&action=afficher&success=' . urlencode('Les modifications ont bien été prises en compte.') . '&collaborateur=' . urlencode($_REQUEST['matricule']));
 							exit();
