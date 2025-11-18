@@ -22,8 +22,8 @@ switch ($action) {
 	case "modifier":
 	{
 		if (isset($_REQUEST["matricule"]) && getAllInformationCompte($_REQUEST["matricule"]) != false) { // si on a indiquer un matricule et que se matricule est correcte
-
 			$info = getAllInformationCompte($_REQUEST["matricule"]);
+			$info["date_embauche"] = explode("/", $info["date_embauche"]);
 			$habilitationsSubordonner = getAllHabilitationSubordonnerOuEgal($_SESSION["habilitation"]);
 			$regions = getAllRegion();
 			//$region = getRegionDuSecteur($info['secteur']);

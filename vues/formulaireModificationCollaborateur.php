@@ -48,7 +48,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Date d'embauche</label>
-                        <input class="form-control" type="date" name="date_embauche" value="<?php echo isset($info[6]) ? htmlspecialchars($info[6]) : ''; ?>">
+                        <input class="form-control" type="date" name="date_embauche" value="<?php echo isset($info["date_embauche"]) ? htmlspecialchars($info["date_embauche"][2]."-".$info["date_embauche"][1]."-".$info["date_embauche"][0]) : ''; ?>">
                     </div>
                     <?php if ($droitDeModificationMajeur) { ?>
                         <div class="mb-3">
