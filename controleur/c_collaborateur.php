@@ -26,7 +26,6 @@ switch ($action) {
 			$info["date_embauche"] = explode("/", $info["date_embauche"]);
 			$habilitationsSubordonner = getAllHabilitationSubordonnerOuEgal($_SESSION["habilitation"]);
 			$regions = getAllRegion();
-			//$region = getRegionDuSecteur($info['secteur']);
 
 			if ($_REQUEST["matricule"] == $_SESSION["matricule"]) { //modifier son propre profil
 				$infoPersonnelle = true;
