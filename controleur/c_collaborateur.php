@@ -43,7 +43,7 @@ switch ($action) {
 		}
 		break;
 	}
-	case 'confirmeModifier': //TODO thomas: rajouter des regex
+	case 'confirmeModifier': //TODO thomas: rajouter des regex, séparer la modif de la consultation, triée par nom et prénom la liste des collaborateurs, n'afficher que les collaborateurs d'un meme secteur pour un responsable de secteur
 	{
 		$habilitaionVide = empty($_REQUEST['habilitation']);
 		if (isset(($_SESSION['habilitation']) )) //test si l'utilisateur est connecté
