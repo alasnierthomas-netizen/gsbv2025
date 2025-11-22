@@ -1,6 +1,22 @@
 <?php 
 include_once 'bd.inc.php';
 
+
+    function collaborateurExiste($matricule): bool
+    {
+        try {
+            $getInfo = connexionPDO();
+            $req = $getInfo->prepare('SELECT * FROM collaborateur WHERE COL_MATRICULE = ?');
+            $req->execute([$matricule]);
+            $res = $req->fetch();
+
+            return ($res != false);
+        } catch (PDOException $e) {
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
     function getDroit(int $id_log): int | array {
         try {
             $getInfo = connexionPDO();
@@ -16,14 +32,18 @@ include_once 'bd.inc.php';
     }
 
 
-    function getAllCollaborateur(): array{
+    function getAllCollaborateurFromSecteur($secteur): array{
         try
         {
             $monPdo = connexionPDO();
-            $req = 'SELECT * FROM collaborateur';
-            $res = $monPdo->query($req);
-            $result = $res->fetchAll();    
-            return $result;
+            $req = $monPdo->prepare('SELECT *
+                FROM collaborateur
+                JOIN region ON region.REG_CODE = collaborateur.REG_CODE
+                WHERE region.SEC_CODE = ?
+                ORDER BY collaborateur.COL_NOM, collaborateur.COL_PRENOM');
+            $req->execute([$secteur]);
+            $res = $req->fetchAll();
+            return $res;
         } 
     
         catch (PDOException $e){

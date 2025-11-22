@@ -13,7 +13,7 @@
             </div>
             <div class="test col-12 col-sm-8 col-lg-6 col-xl-5 col-xxl-4 py-lg-5 py-3">
                 <?php if (!empty($_SESSION['erreur'])) {
-                    echo '<p class="alert alert-danger text-center w-100">Un problème est survenu.</p>';
+                    echo '<p class="alert alert-danger text-center w-100">'.$_SESSION['erreur'].'</p>';
                     $_SESSION['erreur'] = false;
                 } ?>
                 <form action="index.php?uc=collaborateur&action=afficher" method="post" class="formulaire-recherche col-12 m-0">

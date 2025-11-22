@@ -8,16 +8,27 @@ if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
 switch ($action) {
 	case 'listCollaborateurs': 
     {
-        $collaborateurs = getAllCollaborateur();
+		$secteur = getSecteur($_SESSION["matricule"]);
+        $collaborateurs = getAllCollaborateurFromSecteur($secteur[0]);
 		include("vues/v_formulaireCollaborateurs.php");
 		break;
     }
 	case "afficher":
 	{
-		$info = getAllInformationCompte($_REQUEST["collaborateur"]);
-		$infoNonPersonnelle = $_SESSION["matricule"] == $info["matricule"] ? false : true;
-		include("vues/v_profil.php");
+		$info = (!empty($_REQUEST['collaborateur']) && collaborateurExiste($_REQUEST['collaborateur']))? getAllInformationCompte($_REQUEST["collaborateur"]) : null;
+		if ($info != null && getSecteur($_SESSION['matricule'])[1] == $info['secteur'])
+		{
+			$infoNonPersonnelle = $_SESSION["matricule"] == $info["matricule"] ? false : true;
+			include("vues/v_profil.php");
+		}
+		else
+		{
+			$_SESSION['erreur'] = "vous ne vous occuper pas du secteur dans le qu'elle se trouve le collaborateur ou selui-ci n'existe pas.";
+			header('Location: index.php?uc=collaborateur&action=listCollaborateurs');
+			exit();
+		}
 		break;
+
 	}
 	case "modifier":
 	{
@@ -43,7 +54,7 @@ switch ($action) {
 		}
 		break;
 	}
-	case 'confirmeModifier': //TODO thomas: rajouter des regex, séparer la modif de la consultation, triée par nom et prénom la liste des collaborateurs, n'afficher que les collaborateurs d'un meme secteur pour un responsable de secteur
+	case 'confirmeModifier': //TODO thomas: rajouter des regex, séparer la modif de la consultation, triée par nom et prénom la liste des collaborateurs
 	{
 		$habilitaionVide = empty($_REQUEST['habilitation']);
 		if (isset(($_SESSION['habilitation']) )) //test si l'utilisateur est connecté
