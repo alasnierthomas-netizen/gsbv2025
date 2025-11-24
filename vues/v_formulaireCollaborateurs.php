@@ -30,7 +30,11 @@
                     </select>
 
                         <input class="btn btn-info text-light valider" type="submit" value="Afficher les informations">
+                        <a href="index.php?uc=collaborateur&action=ajouter">
+                            Ajouter un collaborateur
+                        </a>
                 </form>
+                        
             </div>
         </div>
     </div>

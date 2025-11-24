@@ -112,13 +112,54 @@ include_once 'bd.inc.php';
         try
         {
             $monPdo = connexionPDO();
-            $req = 'SELECT * FROM region';
+            $req = 'SELECT * FROM region
+                    order by REG_NOM';
             $res = $monPdo->query($req);
             $result = $res->fetchAll();    
             return $result;
         } 
     
         catch (PDOException $e){
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
+    function getRegionDuSecteur($secteur): array{
+        try
+        {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('SELECT * FROM region WHERE SEC_CODE = ? ORDER BY REG_NOM');
+            $req->execute([$secteur]);
+            $res = $req->fetchAll();
+            return $res;
+        } 
+    
+        catch (PDOException $e){
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
+    function ajouterCollaborateur($matricule, $nom, $prenom, $rue, $code_postal, $ville, $date_embauche, $habilitation, $region): bool {
+        try {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('INSERT INTO collaborateur (COL_MATRICULE, COL_NOM, COL_PRENOM, COL_ADRESSE, COL_CP, COL_VILLE, COL_DATEEMBAUCHE, HAB_ID, REG_CODE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $res = $req->execute([$matricule, $nom, $prenom, $rue, $code_postal, $ville, $date_embauche, $habilitation, $region]);
+            return $res;
+        } catch (PDOException $e) {
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
+    function ajouterCollaborateurResponsableSecteur($matricule, $nom, $prenom, $rue, $code_postal, $ville, $date_embauche, $habilitation, $region): bool {
+        try {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('INSERT INTO collaborateur (COL_MATRICULE, COL_NOM, COL_PRENOM, COL_ADRESSE, COL_CP, COL_VILLE, COL_DATEEMBAUCHE, HAB_ID, SEC_CODE, REG_CODE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $res = $req->execute([$matricule, $nom, $prenom, $rue, $code_postal, $ville, $date_embauche, $habilitation, getSecteurDeLaRegion($region), $region]);
+            return $res;
+        } catch (PDOException $e) {
             print "Erreur !: " . $e->getMessage();
             die();
         }
