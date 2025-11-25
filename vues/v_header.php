@@ -34,8 +34,14 @@
                                 <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=secteur&action=statistiqueSecteur">statistiques des Médicaments</a>
                             </li>
 
-                            <li class="nav-item ">
-                                <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=collaborateur&action=listCollaborateurs">Gérer les collaborateur</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle btn-outline-info rounded-pill px-3 fw-bold" href="#" id="collabDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Gérer les collaborateurs
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="collabDropdown">
+                                    <li><a class="dropdown-item" href="index.php?uc=collaborateur&action=listCollaborateurs">Liste des collaborateurs</a></li>
+                                    <li><a class="dropdown-item" href="index.php?uc=collaborateur&action=listeDeCollaborateurModifiable">Modifier/Ajouter un collaborateur</a></li>
+                                </ul>
                             </li>
                             <?php
                         }
