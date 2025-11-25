@@ -32,7 +32,7 @@
         <div class="col-md-6">
             <div class="card border-primary">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Médicaments présenter</h5>
+                    <h5 class="card-title">Médicaments présentés</h5>
                     <p class="card-text display-4 text-primary fw-bold">
                         <?= intval($medicamentPresenter[0][0] ?? 0) ?>
                     </p>

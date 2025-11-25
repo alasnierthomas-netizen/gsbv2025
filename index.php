@@ -1,4 +1,4 @@
-<?php
+<?php // TODO: suposer la région en fonction des 2 premiére lettres du code postal + les xtatistique des médicament doivent étre individielle (médicament par médicament)
     require_once('modele/medicament.modele.inc.php');
 
     require_once('modele/collaborateur.modele.inc.php');
