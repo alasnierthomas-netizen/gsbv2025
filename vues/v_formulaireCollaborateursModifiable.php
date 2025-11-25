@@ -2,9 +2,9 @@
 <section class="bg-light">
     <div class="container">
         <div class="structure-hero pt-lg-5 pt-4">
-            <h1 class="titre text-center">Sélectionner un collaborateur</h1>
+            <h1 class="titre text-center">Modifier un collaborateur</h1>
             <p class="text text-center">
-                Choisissez un collaborateur pour afficher ses informations.
+                Choisissez un collaborateur pour modifier ses informations.
             </p>
         </div>
         <div class="row align-items-center justify-content-center">
@@ -16,9 +16,9 @@
                     echo '<p class="alert alert-danger text-center w-100">'.$_SESSION['erreur'].'</p>';
                     $_SESSION['erreur'] = false;
                 } ?>
-                <form action="index.php?uc=collaborateur&action=afficher" method="post" class="formulaire-recherche col-12 m-0">
+                <form action="index.php?uc=collaborateur&action=modifier" method="post" class="formulaire-recherche col-12 m-0">
                     <label class="titre-formulaire" for="listecollab">Collaborateurs disponibles :</label>
-                    <select required name="collaborateur" id="listecollab" class="form-select mt-3">
+                    <select required name="matricule" id="listecollab" class="form-select mt-3">
                         <option value class="text-center">- Choisissez un collaborateur -</option>
                         <?php
                         foreach ($collaborateurs as $collaborateur) {
@@ -29,7 +29,12 @@
                         ?>
                     </select>
 
-                        <input class="btn btn-info text-light valider" type="submit" value="Afficher les informations">
+                        <div class="d-flex justify-content-end align-items-center gap-2 mt-3">
+                            <input class="btn btn-info text-light valider" type="submit" value="Modifier un collaborateur">
+                            <a class="btn btn-info text-light valider" role="button" href="index.php?uc=collaborateur&action=ajouter">
+                                Ajouter un collaborateur
+                            </a>
+                        </div>
                 </form>
                         
             </div>

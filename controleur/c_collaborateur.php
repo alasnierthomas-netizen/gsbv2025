@@ -13,6 +13,13 @@ switch ($action) {
         include("vues/v_formulaireCollaborateurs.php");
         break;
     }
+	case 'listeDeCollaborateurModifiable': 
+    {
+        $secteur = getSecteur($_SESSION["matricule"]);
+        $collaborateurs = getAllCollaborateurFromSecteur($secteur[0]);
+        include("vues/v_formulaireCollaborateursModifiable.php");
+        break;
+    }
     case "afficher":
     {
         $info = (!empty($_REQUEST['collaborateur']) && collaborateurExiste($_REQUEST['collaborateur']))? getAllInformationCompte($_REQUEST["collaborateur"]) : null;
@@ -119,8 +126,8 @@ switch ($action) {
 
     case "modifier":
     {
-        if (isset($_REQUEST["matricule"]) && getAllInformationCompte($_REQUEST["matricule"]) != false) { // si on a indiquer un matricule et que se matricule est correcte
-            $info = getAllInformationCompte($_REQUEST["matricule"]);
+		$info = (isset($_REQUEST["matricule"]) && collaborateurExiste($_REQUEST["matricule"]))? getAllInformationCompte($_REQUEST["matricule"]) : null;
+        if ($info != null && getSecteur($_SESSION['matricule'])[1] == $info['secteur']) { // on s'assure que le collaborateur existe et qu'il fait partie du secteur de l'utilisateur connecté
             $info["date_embauche"] = explode("/", $info["date_embauche"]);
             $habilitationsSubordonner = getAllHabilitationSubordonnerOuEgal($_SESSION["habilitation"]);
             $regions = getRegionDuSecteur(getSecteur($_SESSION["matricule"])[0]);
@@ -136,8 +143,9 @@ switch ($action) {
             include("vues/formulaireModificationCollaborateur.php");
         }
         else{
-            header('Location: index.php');
-            break;
+            $_SESSION['erreur'] = "vous ne vous occuper pas du secteur dans le qu'elle se trouve le collaborateur ou selui-ci n'existe pas.";
+            header('Location: index.php?uc=collaborateur&action=listeDeCollaborateurModifiable');
+            exit();
         }
         break;
     }
