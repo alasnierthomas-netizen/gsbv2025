@@ -60,15 +60,6 @@
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Région</label>
-                        <select name="region" id="region" class="form-control" required>
-                            <option value="">-- Sélectionner une région --</option>
-                            <?php foreach ($regions as $region) { ?>
-                            <option value="<?php echo $region[0] ?>" <?php echo (isset($_REQUEST['region']) && $_REQUEST['region'] == $region[0])? "selected" : "" ?>> <?php echo htmlspecialchars($region[1])  ?> </option>
-                            <?php } ?>
-                        </select>
-                    </div>
 
                     <div class="d-flex justify-content-between">
                         <a class="btn btn-secondary" href="index.php?uc=collaborateur&action=listCollaborateurs">Annuler</a>

@@ -55,15 +55,9 @@ switch ($action) {
             $secteurUtilisateur = getSecteur($_SESSION['matricule']);
             $regionsAutorisees = array_column(getRegionDuSecteur($secteurUtilisateur[0]), 0);
 
-            // vérification que la région soumise est autorisée
-            if (!isset($_REQUEST['region']) || !in_array($_REQUEST['region'], $regionsAutorisees)) {
-                header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Région non autorisée.'));
-                exit();
-            }
-
             if (isset($_REQUEST['matricule'])) // test si le matricule est bien présent
             {
-                if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '' && isset($_REQUEST['region']) && $_REQUEST['region'] != '' && isset($_REQUEST['habilitation']) && $_REQUEST['habilitation'] != '') // test si tous les champs sont présents
+                if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '' && isset($_REQUEST['habilitation'])) // test si tous les champs sont présents
                 {
                     // validation regex : code postal = 5 chiffres, rue = lettres/chiffres/espaces/ponctuation basique (2-100 chars)
                     $cp = trim($_REQUEST['code_postal']);
@@ -78,23 +72,54 @@ switch ($action) {
                         header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Ce matricule existe déjà.'));
                         exit();
                     }
-
-                    if ($_REQUEST['habilitation'] == 3 && secteurOccuper(getSecteurDeLaRegion($_REQUEST['region']), $_REQUEST['matricule']))
+                    
+                    // vérifier que le département existe et qu'il appartient au secteur de l'utilisateur connecté
+                    $departement = departement($cp[0].$cp[1]);
+                    if ($departement == false || getSecteur($_SESSION['matricule'])[1] != getSecteurDeLaRegion($departement["REG_CODE"]))
                     {
-                        header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Le secteur est déjà occupé par un autre responsable de secteur.'));
+                        header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Le département correspondant à ce code postal n’existe pas ou n’appartient pas à votre secteur.'));
                         exit();
                     }
-                    $ajoutReussi = ajouterCollaborateurResponsableSecteur(
-                        $_REQUEST['matricule'],
-                        $_REQUEST['nom'],
-                        $_REQUEST['prenom'],
-                        $_REQUEST['rue'],
-                        $cp,
-                        $_REQUEST['ville'],
-                        $_REQUEST['date_embauche'],
-                        $_REQUEST['habilitation'],
-                        $_REQUEST['region']
-                    );
+
+                    // détermine l'habilitation fournie
+                    $habilitation = $_REQUEST['habilitation'];
+                    // si c'est un responsable de secteur (habilitation = 3)
+                    if ($habilitation == 3)
+                    {
+                        if (secteurOccuper(getSecteurDeLaRegion($departement["REG_CODE"]), $_REQUEST['matricule']))
+                        {
+                            header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Le secteur est déjà occupé par un autre responsable de secteur.'));
+                            exit();
+                        }
+                        else
+                        {
+                            $ajoutReussi = ajouterCollaborateurResponsableSecteur(
+                                $_REQUEST['matricule'],
+                                $_REQUEST['nom'],
+                                $_REQUEST['prenom'],
+                                $_REQUEST['rue'],
+                                $cp,
+                                $_REQUEST['ville'],
+                                $_REQUEST['date_embauche'],
+                                $habilitation,
+                                $departement["REG_CODE"]
+                            );
+                        }
+                    }
+                    else
+                    {
+                        $ajoutReussi = ajouterCollaborateur(
+                            $_REQUEST['matricule'],
+                            $_REQUEST['nom'],
+                            $_REQUEST['prenom'],
+                            $_REQUEST['rue'],
+                            $cp,
+                            $_REQUEST['ville'],
+                            $_REQUEST['date_embauche'],
+                            $habilitation,
+                            $departement["REG_CODE"]
+                        );
+                    }
                     
                     if ($ajoutReussi) {
                         header('Location: index.php?uc=collaborateur&action=afficher&success=' . urlencode('Le collaborateur a bien été ajouté.') . '&collaborateur=' . urlencode($_REQUEST['matricule']));
@@ -159,17 +184,20 @@ switch ($action) {
             $secteurUtilisateur = getSecteur($_SESSION['matricule']);
             $regionsAutorisees = array_column(getRegionDuSecteur($secteurUtilisateur[0]), 0);
 
-            // si une région a été soumise, vérifier qu'elle est autorisée
-            if (isset($_REQUEST['region']) && !in_array($_REQUEST['region'], $regionsAutorisees)) {
-                header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Région non autorisée.') . '&matricule=' . urlencode($_REQUEST['matricule'] ?? ''));
+            // vérifier que le département existe et qu'il appartient au secteur de l'utilisateur connecté
+            $departement = departement($cp[0].$cp[1]);
+            if ($departement == false || getSecteur($_SESSION['matricule'])[1] != getSecteurDeLaRegion($departement["REG_CODE"]))
+            {
+                header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Le département correspondant à ce code postal n’existe pas ou n’appartient pas à votre secteur.'));
                 exit();
             }
+
 
             if ($habilitaionVide || superieurOuEgal( $_SESSION['habilitation'], $_REQUEST['habilitation'])) //test si l'utilisateur ne donne pas des droit supérieur au sien
             {
                 if (isset($_REQUEST['matricule'])) // test si le matricule est bien présent
                 {
-                    if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '' && isset($_REQUEST['region'])) // test si tout les champs sont bien présent
+                    if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '') // test si tout les champs sont bien présent
                     {
                         // validation regex : code postal = 5 chiffres
                         $cp = trim($_REQUEST['code_postal']);
@@ -184,20 +212,20 @@ switch ($action) {
                         }
                         if (($habilitaionVide)? $habilitation = 3 : $_REQUEST['habilitation'] == 3)
                         {
-                            if (secteurOccuper(getSecteurDeLaRegion($_REQUEST['region']), $_REQUEST['matricule']))
+                            if (secteurOccuper(getSecteurDeLaRegion($departement["REG_CODE"]), $_REQUEST['matricule']))
                             {
                                 header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Le secteur est déjà occupée par un autre responsable de secteur.') . '&matricule=' . urlencode($_REQUEST['matricule']));
                                 exit();
                             }
                             else
                             {
-                                $modificationReussi = modifierCollaborateurResponsableSecteur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $cp, $_REQUEST['ville'], $_REQUEST['date_embauche'], ($habilitaionVide)? $habilitation : $_REQUEST['habilitation'], $_REQUEST['region']);
+                                $modificationReussi = modifierCollaborateurResponsableSecteur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $cp, $_REQUEST['ville'], $_REQUEST['date_embauche'], ($habilitaionVide)? $habilitation : $_REQUEST['habilitation'], $departement["REG_CODE"]);
                             }
 
                         }
                         else
                         {
-                            $modificationReussi = modifierCollaborateur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $cp, $_REQUEST['ville'], $_REQUEST['date_embauche'], ($habilitaionVide)? $habilitation : $_REQUEST['habilitation'], $_REQUEST['region']);
+                            $modificationReussi = modifierCollaborateur($_REQUEST['matricule'], $_REQUEST['nom'], $_REQUEST['prenom'], $_REQUEST['rue'], $cp, $_REQUEST['ville'], $_REQUEST['date_embauche'], ($habilitaionVide)? $habilitation : $_REQUEST['habilitation'], $departement["REG_CODE"]);
 
                         }
                             

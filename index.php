@@ -1,4 +1,6 @@
-<?php // TODO: suposer la région en fonction des 2 premiére lettres du code postal + les xtatistique des médicament doivent étre individielle (médicament par médicament)
+<?php // TODO: les statistique des médicament doivent étre individuelle (médicament par médicament)
+    ob_start(); // TODO: cette ligne a fixe un bug d'affichage de la page après une redirection mais je sais pas pourquoi, demander a la prof. aussi peux t'il y avoir plusieur Responsable Secteur dans un méme secteur ?
+
     require_once('modele/medicament.modele.inc.php');
 
     require_once('modele/collaborateur.modele.inc.php');

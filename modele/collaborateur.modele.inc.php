@@ -240,6 +240,32 @@ include_once 'bd.inc.php';
         }
     }
 
+        function existeDepartement($NoDEPT): bool {
+        try {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('SELECT * FROM departement WHERE NoDEPT = ?');
+            $req->execute([$NoDEPT]);
+            $res = $req->fetchAll();
+            return (count($res) > 0); // Return true si le département existe
+        } catch (PDOException $e) {
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
+    function departement($NoDEPT): array {
+        try {
+            $monPdo = connexionPDO();
+            $req = $monPdo->prepare('SELECT * FROM departement WHERE NoDEPT = ?');
+            $req->execute([$NoDEPT]);
+            $res = $req->fetch();
+            return $res; // Return true si le département existe
+        } catch (PDOException $e) {
+            print "Erreur !: " . $e->getMessage();
+            die();
+        }
+    }
+
     function getLibelleHabilitation(int $hab_id): array{
         try 
         {
