@@ -31,7 +31,7 @@
                         if ( !empty($_SESSION['habilitation']) && $_SESSION['habilitation'] == 3){
                             ?>
                             <li class="nav-item ">
-                                <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=secteur&action=statistiqueSecteur">statistiques des Médicaments</a>
+                                <a class="nav-link btn-outline-info rounded-pill px-3 fw-bold" href="index.php?uc=secteur&action=statistiqueSecteur">Statistiques des médicaments</a>
                             </li>
 
                             <li class="nav-item dropdown">

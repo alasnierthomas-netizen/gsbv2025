@@ -1,5 +1,5 @@
 <section class="container mt-5">
-    <h1 class="text-center mb-4">statistiques des Médicaments du secteur <?php echo $secteur[1] ?></h1>
+    <h1 class="text-center mb-4">Statistiques des médicaments du secteur <?php echo $secteur[1] ?></h1>
 
     <!-- Formulaire de recherche -->
     <form method="POST" action="index.php?uc=secteur&action=rechercher" class="row g-3 mb-4">
@@ -34,7 +34,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Médicaments présentés</h5>
                     <p class="card-text display-4 text-primary fw-bold">
-                        <?= intval($medicamentPresenter[0][0] ?? 0) ?>
+                        <?= intval($sommeMedicamentPresenter[0][0] ?? 0) ?>
                     </p>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Médicaments offerts</h5>
                     <p class="card-text display-4 text-success fw-bold">
-                        <?= intval($medicamentOffert[0][0] ?? 0) ?>
+                        <?= intval($sommeMedicamentOffert[0][0] ?? 0) ?>
                     </p>
                 </div>
             </div>

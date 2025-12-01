@@ -59,6 +59,7 @@ switch ($action) {
             {
                 if (isset($_REQUEST['nom']) && isset($_REQUEST['prenom']) && isset($_REQUEST['rue']) && isset($_REQUEST['code_postal']) && isset($_REQUEST['ville']) && isset($_REQUEST['date_embauche']) && $_REQUEST['date_embauche'] != '' && isset($_REQUEST['habilitation'])) // test si tous les champs sont présents
                 {
+
                     // validation regex : code postal = 5 chiffres, rue = lettres/chiffres/espaces/ponctuation basique (2-100 chars)
                     $cp = trim($_REQUEST['code_postal']);
                     if (!preg_match('/^[0-9]{5}$/', $cp)) {
@@ -74,6 +75,7 @@ switch ($action) {
                     }
                     
                     // vérifier que le département existe et qu'il appartient au secteur de l'utilisateur connecté
+                    $cp = trim($_REQUEST['code_postal']);
                     $departement = departement($cp[0].$cp[1]);
                     if ($departement == false || getSecteur($_SESSION['matricule'])[1] != getSecteurDeLaRegion($departement["REG_CODE"]))
                     {
@@ -185,10 +187,11 @@ switch ($action) {
             $regionsAutorisees = array_column(getRegionDuSecteur($secteurUtilisateur[0]), 0);
 
             // vérifier que le département existe et qu'il appartient au secteur de l'utilisateur connecté
+            $cp = trim($_REQUEST['code_postal']);
             $departement = departement($cp[0].$cp[1]);
             if ($departement == false || getSecteur($_SESSION['matricule'])[1] != getSecteurDeLaRegion($departement["REG_CODE"]))
             {
-                header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Le département correspondant à ce code postal n’existe pas ou n’appartient pas à votre secteur.'));
+                header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Le département correspondant à ce code postal n’existe pas ou n’appartient pas à votre secteur.' . '&matricule=' . urlencode($_REQUEST['matricule'])));
                 exit();
             }
 
