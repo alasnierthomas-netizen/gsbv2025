@@ -27,8 +27,46 @@
         </div>
     </form>
 
+    <!-- Affichage les statistiques individuelle des médicament -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="px-3 py-2">Médicament</th>
+                            <th class="px-3 py-2 text-center">Présentés</th>
+                            <th class="px-3 py-2 text-center">Offerts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($medicamentPresenterOuOffert as $med): ?>
+                            <tr>
+                                <?php
+                                // Chercher le nom du médicament à partir de la clé
+                                $nomMedicament = $med["medicament"];
+                                foreach ($medicaments as $m) {
+                                    if ($m[0] == $nomMedicament) {
+                                        $nomMedicament = $m[1];
+                                        break;
+                                    }
+                                } ?>
+
+                                <td class="px-3 py-2"><?php echo htmlspecialchars($nomMedicament); ?></td>
+                                <td class="px-3 py-2 text-center"><span class="badge bg-info text-dark px-3 py-2 fs-6"><?= intval($med["presentes"] ?? 0) ?></span></td>
+                                <td class="px-3 py-2 text-center"><span class="badge bg-success px-3 py-2 fs-6"><?= intval($med["offert"] ?? 0) ?></span></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Résultats: affichage des 2 statistiques -->
-    <div class="row g-3 mt-4">
+    <div class="row g-3 mt-4" style="margin-bottom: 20px;">
         <div class="col-md-6">
             <div class="card border-primary">
                 <div class="card-body text-center">

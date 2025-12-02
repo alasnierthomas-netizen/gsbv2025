@@ -38,18 +38,223 @@ function getMedicamentOffert($secteur) {
         offrir.MED_DEPOTLEGAL AS medicament,
         SUM(offrir.OFF_QTE) AS qte_totale_offerte
         FROM offrir
-        JOIN rapport_visite 
-            ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+        JOIN rapport_visite ON offrir.RAP_NUM = rapport_visite.RAP_NUM
         AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
-        JOIN collaborateur 
-            ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
-        JOIN region 
-            ON collaborateur.REG_CODE = region.REG_CODE
+        JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+        JOIN region ON collaborateur.REG_CODE = region.REG_CODE
         WHERE region.SEC_CODE = :secteur
         GROUP BY offrir.MED_DEPOTLEGAL';
                 
         $stmt = $monPdo->prepare($req);
         $stmt->bindParam(':secteur', $secteur[0]);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        die("Erreur SQL : " . $e->getMessage());
+    }
+}
+
+function getMedicamentPresenterOuOffert($secteur) {
+    try {
+        $monPdo = connexionPDO();
+        $req = 'SELECT 
+            COALESCE(t1.medicament, t2.medicament) AS medicament,
+            t2.nb_citations AS presentes,
+            t1.qte_totale_offerte AS offert
+        FROM
+            (SELECT 
+                offrir.MED_DEPOTLEGAL AS medicament,
+                SUM(offrir.OFF_QTE) AS qte_totale_offerte
+            FROM offrir
+            JOIN rapport_visite 
+                ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+            AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
+            JOIN collaborateur 
+                ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+            JOIN region 
+                ON collaborateur.REG_CODE = region.REG_CODE
+            WHERE region.SEC_CODE = :secteur
+            GROUP BY offrir.MED_DEPOTLEGAL
+            ) AS t1
+        LEFT JOIN
+            (SELECT medicament, COUNT(*) AS nb_citations
+            FROM (
+                SELECT MED_DEPOTLEGAL_PRES1 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES1 IS NOT NULL AND region.SEC_CODE = :secteur
+
+                UNION ALL
+
+                SELECT MED_DEPOTLEGAL_PRES2 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES2 IS NOT NULL AND region.SEC_CODE = :secteur
+            ) AS meds
+            GROUP BY medicament
+            ) AS t2
+        ON t1.medicament = t2.medicament
+
+        UNION
+
+        SELECT 
+            COALESCE(t1.medicament, t2.medicament) AS medicament,
+            t2.nb_citations AS presentes,
+            t1.qte_totale_offerte AS offert
+        FROM
+            (SELECT 
+                offrir.MED_DEPOTLEGAL AS medicament,
+                SUM(offrir.OFF_QTE) AS qte_totale_offerte
+            FROM offrir
+            JOIN rapport_visite 
+                ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+            AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
+            JOIN collaborateur 
+                ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+            JOIN region 
+                ON collaborateur.REG_CODE = region.REG_CODE
+            WHERE region.SEC_CODE = :secteur
+            GROUP BY offrir.MED_DEPOTLEGAL
+            ) AS t1
+        RIGHT JOIN
+            (SELECT medicament, COUNT(*) AS nb_citations
+            FROM (
+                SELECT MED_DEPOTLEGAL_PRES1 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES1 IS NOT NULL AND region.SEC_CODE = :secteur
+
+                UNION ALL
+
+                SELECT MED_DEPOTLEGAL_PRES2 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES2 IS NOT NULL AND region.SEC_CODE = :secteur
+            ) AS meds
+            GROUP BY medicament
+            ) AS t2
+        ON t1.medicament = t2.medicament;
+        ';
+        $stmt = $monPdo->prepare($req);
+        $stmt->bindParam(':secteur', $secteur[0]);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        die("Erreur SQL : " . $e->getMessage());
+    }
+}
+
+// Nouvelle fonction avec filtres
+function getMedicamentPresenterOuOffertFiltre($secteur, $dateDebut, $dateFin, $medicament) {
+    try {
+        $monPdo = connexionPDO();
+
+        // Construction des filtres pour la requête
+        $filtreDate = '';
+        $filtreMedicamentPres = '';
+        $filtreMedicamentOffert = '';
+        if (!empty($dateDebut)) {
+            $filtreDate .= " AND rapport_visite.RAP_DATEVISITE >= date(:dateDebut)";
+        }
+        if (!empty($dateFin)) {
+            $filtreDate .= " AND rapport_visite.RAP_DATEVISITE <= date(:dateFin)";
+        }
+        if (!empty($medicament)) {
+            $filtreMedicamentPres .= " AND (rapport_visite.MED_DEPOTLEGAL_PRES1 = :medicament OR rapport_visite.MED_DEPOTLEGAL_PRES2 = :medicament)";
+            $filtreMedicamentOffert .= " AND offrir.MED_DEPOTLEGAL = :medicament";
+        }
+
+        $req = "SELECT 
+            COALESCE(t1.medicament, t2.medicament) AS medicament,
+            t2.nb_citations AS presentes,
+            t1.qte_totale_offerte AS offert
+        FROM
+            (SELECT 
+                offrir.MED_DEPOTLEGAL AS medicament,
+                SUM(offrir.OFF_QTE) AS qte_totale_offerte
+            FROM offrir
+            JOIN rapport_visite 
+                ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+            AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
+            JOIN collaborateur 
+                ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+            JOIN region 
+                ON collaborateur.REG_CODE = region.REG_CODE
+            WHERE region.SEC_CODE = :secteur" . $filtreDate . $filtreMedicamentOffert . "
+            GROUP BY offrir.MED_DEPOTLEGAL
+            ) AS t1
+        LEFT JOIN
+            (SELECT medicament, COUNT(*) AS nb_citations
+            FROM (
+                SELECT MED_DEPOTLEGAL_PRES1 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES1 IS NOT NULL AND region.SEC_CODE = :secteur" . $filtreDate . $filtreMedicamentPres . "
+
+                UNION ALL
+
+                SELECT MED_DEPOTLEGAL_PRES2 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES2 IS NOT NULL AND region.SEC_CODE = :secteur" . $filtreDate . $filtreMedicamentPres . "
+            ) AS meds
+            GROUP BY medicament
+            ) AS t2
+        ON t1.medicament = t2.medicament
+
+        UNION
+
+        SELECT 
+            COALESCE(t1.medicament, t2.medicament) AS medicament,
+            t2.nb_citations AS presentes,
+            t1.qte_totale_offerte AS offert
+        FROM
+            (SELECT 
+                offrir.MED_DEPOTLEGAL AS medicament,
+                SUM(offrir.OFF_QTE) AS qte_totale_offerte
+            FROM offrir
+            JOIN rapport_visite 
+                ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+            AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
+            JOIN collaborateur 
+                ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+            JOIN region 
+                ON collaborateur.REG_CODE = region.REG_CODE
+            WHERE region.SEC_CODE = :secteur" . $filtreDate . $filtreMedicamentOffert . "
+            GROUP BY offrir.MED_DEPOTLEGAL
+            ) AS t1
+        RIGHT JOIN
+            (SELECT medicament, COUNT(*) AS nb_citations
+            FROM (
+                SELECT MED_DEPOTLEGAL_PRES1 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES1 IS NOT NULL AND region.SEC_CODE = :secteur" . $filtreDate . $filtreMedicamentPres . "
+
+                UNION ALL
+
+                SELECT MED_DEPOTLEGAL_PRES2 AS medicament
+                FROM rapport_visite
+                JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
+                JOIN region ON collaborateur.REG_CODE = region.REG_CODE
+                WHERE MED_DEPOTLEGAL_PRES2 IS NOT NULL AND region.SEC_CODE = :secteur" . $filtreDate . $filtreMedicamentPres . "
+            ) AS meds
+            GROUP BY medicament
+            ) AS t2
+        ON t1.medicament = t2.medicament;";
+
+        $stmt = $monPdo->prepare($req);
+        $stmt->bindParam(':secteur', $secteur[0]);
+        if (!empty($dateDebut)) $stmt->bindParam(':dateDebut', $dateDebut);
+        if (!empty($dateFin)) $stmt->bindParam(':dateFin', $dateFin);
+        if (!empty($medicament)) $stmt->bindParam(':medicament', $medicament);
         $stmt->execute();
         return $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -79,7 +284,7 @@ function sommeMedicamentOffert($secteur) {
         $monPdo = connexionPDO();
         $req = 'SELECT SUM(offrir.OFF_QTE)
                 FROM offrir
-                JOIN rapport_visite ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+                JOIN rapport_visite ON offrir.RAP_NUM = rapport_visite.RAP_NUM AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
                 JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
                 JOIN region ON collaborateur.REG_CODE = region.REG_CODE
                 WHERE region.SEC_CODE = :secteur';
@@ -127,7 +332,7 @@ function sommeMedicamentOffertFiltre($secteur, $dateDebut, $dateFin, $medicament
 
     $req = "SELECT SUM(offrir.OFF_QTE)
             FROM offrir
-            JOIN rapport_visite ON offrir.RAP_NUM = rapport_visite.RAP_NUM
+            JOIN rapport_visite ON offrir.RAP_NUM = rapport_visite.RAP_NUM AND offrir.COL_MATRICULE = rapport_visite.COL_MATRICULE
             JOIN collaborateur ON rapport_visite.COL_MATRICULE = collaborateur.COL_MATRICULE
             JOIN region ON collaborateur.REG_CODE = region.REG_CODE
             WHERE region.SEC_CODE = :secteur";

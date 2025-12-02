@@ -14,8 +14,7 @@ switch ($action) {
         case 'statistiqueSecteur':{
             $secteur = getSecteur($_SESSION['matricule']);
             $medicaments = getAllNomMedicament();
-            //$medicamentPresenter = getMedicamentPresenter($secteur);
-            //$medicamentOffert = getMedicamentOffert($secteur);
+            $medicamentPresenterOuOffert = getMedicamentPresenterOuOffert($secteur);
             $sommeMedicamentPresenter = sommeMedicamentPresenter($secteur);
 			$sommeMedicamentOffert = sommeMedicamentOffert($secteur);
             include 'vues/v_statistiqueSecteur.php';
@@ -26,8 +25,7 @@ switch ($action) {
         case 'rechercher':{
             $secteur = getSecteur($_SESSION['matricule']);
 			$medicaments = getAllNomMedicament();
-            //$medicamentPresenter = getMedicamentPresenter($secteur);
-            //$medicamentOffert = getMedicamentOffert($secteur);
+            $medicamentPresenterOuOffert = getMedicamentPresenterOuOffertFiltre($secteur, empty($_REQUEST['dateDebut'])? null : $_REQUEST['dateDebut'], empty($_REQUEST["dateFin"])? null : $_REQUEST["dateFin"], empty($_REQUEST["medicament"])? null : $_REQUEST["medicament"]);
             $sommeMedicamentPresenter = sommeMedicamentPresenterFiltre($secteur, empty($_REQUEST['dateDebut'])? null : $_REQUEST['dateDebut'], empty($_REQUEST["dateFin"])? null : $_REQUEST["dateFin"], empty($_REQUEST["medicament"])? null : $_REQUEST["medicament"]);
             $sommeMedicamentOffert = sommeMedicamentOffertFiltre($secteur, empty($_REQUEST['dateDebut'])? null : $_REQUEST['dateDebut'], empty($_REQUEST["dateFin"])? null : $_REQUEST["dateFin"], empty($_REQUEST["medicament"])? null : $_REQUEST["medicament"]);
 			include 'vues/v_statistiqueSecteur.php';
