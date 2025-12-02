@@ -1,5 +1,5 @@
-<?php // TODO: les statistique des médicament doivent étre individuelle (médicament par médicament)
-    ob_start(); // TODO: cette ligne a fixe un bug d'affichage de la page après une redirection mais je sais pas pourquoi, demander a la prof. aussi peux t'il y avoir plusieur Responsable Secteur dans un méme secteur ?
+<?php
+    //ob_start(); // TODO: cette ligne a fixe un bug d'affichage de la page après une redirection mais je sais pas pourquoi, demander a la prof. aussi peux t'il y avoir plusieur Responsable Secteur dans un méme secteur ?
 
     require_once('modele/medicament.modele.inc.php');
 

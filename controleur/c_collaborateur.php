@@ -77,7 +77,7 @@ switch ($action) {
                     // vérifier que le département existe et qu'il appartient au secteur de l'utilisateur connecté
                     $cp = trim($_REQUEST['code_postal']);
                     $departement = departement($cp[0].$cp[1]);
-                    if ($departement == false || getSecteur($_SESSION['matricule'])[1] != getSecteurDeLaRegion($departement["REG_CODE"]))
+                    if ($departement == false || getSecteur($_SESSION['matricule'])["SEC_CODE"] != getSecteurDeLaRegion($departement["REG_CODE"]))
                     {
                         header('Location: index.php?uc=collaborateur&action=ajouter&erreur=' . urlencode('Le département correspondant à ce code postal n’existe pas ou n’appartient pas à votre secteur.'));
                         exit();
@@ -189,7 +189,7 @@ switch ($action) {
             // vérifier que le département existe et qu'il appartient au secteur de l'utilisateur connecté
             $cp = trim($_REQUEST['code_postal']);
             $departement = departement($cp[0].$cp[1]);
-            if ($departement == false || getSecteur($_SESSION['matricule'])[1] != getSecteurDeLaRegion($departement["REG_CODE"]))
+            if ($departement == false || getSecteur($_SESSION['matricule'])["SEC_CODE"] != getSecteurDeLaRegion($departement["REG_CODE"]))
             {
                 header('Location: index.php?uc=collaborateur&action=modifier&erreur=' . urlencode('Le département correspondant à ce code postal n’existe pas ou n’appartient pas à votre secteur.' . '&matricule=' . urlencode($_REQUEST['matricule'])));
                 exit();
