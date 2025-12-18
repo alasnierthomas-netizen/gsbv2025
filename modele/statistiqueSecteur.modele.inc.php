@@ -54,6 +54,13 @@ function getMedicamentOffert($secteur) {
     }
 }
 
+/**
+ * Récupère les médicaments présents ou offerts dans un secteur donné.
+ * La requête fusionne les résultats des médicaments présentés et offerts. Elle démarre à partir d’une requête qui commence par les médicaments offerts et d’une autre qui commence par les médicaments présentés
+ * les deux requêtes sont ensuite fusionnées en fonction du médicament.
+ * @param array $secteur Le code du secteur.
+ * @return array Les médicaments présents ou offerts avec leurs statistiques.
+ */
 function getMedicamentPresenterOuOffert($secteur) {
     try {
         $monPdo = connexionPDO();
