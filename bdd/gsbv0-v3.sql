@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS `collaborateur` (
 --
 
 INSERT INTO `collaborateur` (`COL_MATRICULE`, `COL_NOM`, `COL_PRENOM`, `COL_ADRESSE`, `COL_CP`, `COL_VILLE`, `COL_DATEEMBAUCHE`, `HAB_ID`, `SEC_CODE`, `REG_CODE`) VALUES
-('a131', 'Villechalane', 'Louis', '8 cours Lafontaine', '29000', 'BREST', '1992-12-11 00:00:00', 2, 'E', 'NO'),
+('a131', 'Villechalane', 'Louis', '8 cours Lafontaine', '29000', 'BREST', '1992-12-11 00:00:00', 2, NULL, 'RA'),
 ('a17', 'Andre', 'David', '1 r Aimon de Chissée', '38100', 'GRENOBLE', '1991-08-26 00:00:00', 1, NULL, 'RA'),
-('a55', 'Bedos', 'Christian', '1 r Bénédictins', '65000', 'TARBES', '1987-07-17 00:00:00', 3, NULL, 'OC'),
+('a55', 'Bedos', 'Christian', '1 r Bénédictins', '01000', 'TARBES', '1987-07-17 00:00:00', 3, 'E', 'RA'),
 ('a93', 'Tusseau', 'Louis', '22 r Renou', '86000', 'POITIERS', '1999-01-02 00:00:00', 2, NULL, 'AQ'),
 ('b13', 'Bentot', 'Pascal', '11 av 6 Juin', '67000', 'STRASBOURG', '1996-03-11 00:00:00', 1, NULL, 'GE'),
 ('b16', 'Bioret', 'Luc', '1 r Linne', '35000', 'RENNES', '1997-03-21 00:00:00', 2, NULL, 'BG'),
@@ -790,7 +790,7 @@ CREATE TABLE IF NOT EXISTS `rapport_visite` (
 --
 
 INSERT INTO `rapport_visite` (`COL_MATRICULE`, `RAP_NUM`, `RAP_DATEVISITE`, `RAP_BILAN`, `RAP_COUT`, `RAP_DATESAISIE`, `ETAT_CODE`, `MOT_CODE`, `PRA_NUM`, `PRA_NUM_REMP`, `MED_DEPOTLEGAL_PRES1`, `MED_DEPOTLEGAL_PRES2`) VALUES
-('a131', 1, '2002-04-18', 'Médecin curieux, à recontacter en décembre pour réunion.', NULL, '0000-00-00', 0, NULL, 23, NULL, NULL, NULL),
+('a131', 1, '2002-04-18', 'Médecin curieux, à recontacter en décembre pour réunion.', NULL, '0000-00-00', 0, NULL, 23, NULL, 'AMOXIG12', NULL),
 ('a131', 2, '2003-03-23', 'RAS.\r\nChangement de tel : 05 89 89 89 89.', NULL, '0000-00-00', 0, NULL, 41, NULL, NULL, NULL),
 ('a131', 3, '2021-12-03', 'Médecin énervé, ancien boxeur !', NULL, '0000-00-00', 0, NULL, 7, NULL, NULL, NULL),
 ('a17', 1, '2003-05-21', 'Changement de direction, redéfinition de la politique médicamenteuse, recours au générique.', NULL, '0000-00-00', 0, NULL, 4, NULL, NULL, NULL);
