@@ -43,6 +43,32 @@
             break;
         }
 
+        case 'rapportdevisite': {
+
+            if (!empty($_SESSION['login'])) {  // Si l'utilisateur est connecté
+                include("controleur/c_rapportVisite.php");
+            }
+            
+            else {  // Si l'utilisateur n'est pas connecté
+                include("vues/v_accesInterdit.php");
+            }
+
+            break;
+        }
+
+        case 'praticiens': {
+
+            if (!empty($_SESSION['login'])) {  // Si l'utilisateur est connecté
+                include("controleur/c_praticiens.php");
+            }
+            
+            else {  // Si l'utilisateur n'est pas connecté
+                include("vues/v_accesInterdit.php");
+            }
+
+            break;
+        }
+
         case 'connexion': {
             include("controleur/c_connexion.php");
             break;
