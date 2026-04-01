@@ -1,6 +1,11 @@
 <?php
 require_once 'modele/bd.inc.php';
 
+/**
+ * Récupère la liste des motifs possibles de visite.
+ *
+ * @return array
+ */
 function getMotif() {
     try {
         $monPdo = connexionPDO();

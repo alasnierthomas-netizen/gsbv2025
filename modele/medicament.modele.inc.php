@@ -2,6 +2,11 @@
 
 include_once 'bd.inc.php';
 
+    /**
+     * Récupère le dépôt légal et le nom commercial de tous les médicaments.
+     *
+     * @return array
+     */
     function getAllNomMedicament(){
 
         try{
@@ -19,6 +24,12 @@ include_once 'bd.inc.php';
 
     }
 
+    /**
+     * Récupère les informations d'un médicament à partir de son dépôt légal.
+     *
+     * @param string $depot Le code dépôt légal du médicament.
+     * @return array|false
+     */
     function getAllInformationMedicamentDepot($depot){
 
         try{
@@ -35,6 +46,12 @@ include_once 'bd.inc.php';
         }
     }
 
+    /**
+     * Récupère les informations d'un médicament à partir de son nom commercial.
+     *
+     * @param string $nom Le nom commercial du médicament.
+     * @return array|false
+     */
     function getAllInformationMedicamentNom($nom){
 
         try{
@@ -51,6 +68,12 @@ include_once 'bd.inc.php';
         }
     }
 
+    /**
+     * Récupère le dépôt légal et le nom commercial d'un médicament par depot.
+     *
+     * @param string $nom Le code dépôt légal du médicament.
+     * @return array|false
+     */
     function getDepotMedoc($nom){
 
         try{
@@ -67,6 +90,11 @@ include_once 'bd.inc.php';
         }
     }
     
+    /**
+     * Retourne le nombre total de médicaments enregistrés.
+     *
+     * @return array|false
+     */
     function getNbMedicament(){
 
         try{

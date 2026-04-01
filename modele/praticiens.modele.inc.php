@@ -3,6 +3,11 @@
 include_once 'bd.inc.php';
 
 
+    /**
+     * Récupère la liste des praticiens.
+     *
+     * @return array
+     */
     function getAllPraticiens(){
 
         try{
@@ -21,6 +26,12 @@ include_once 'bd.inc.php';
     }
 
 	
+    /**
+     * Récupère les informations complètes d'un praticien.
+     *
+     * @param string $depot Le numéro du praticien.
+     * @return array|false
+     */
     function getAllInformationPraticien($depot){
 
         try{

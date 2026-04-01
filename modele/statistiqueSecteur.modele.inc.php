@@ -2,6 +2,12 @@
 require_once 'modele/bd.inc.php';
 
 
+/**
+ * Récupère le nombre de présentations de chaque médicament pour un secteur donné.
+ *
+ * @param array $secteur Code du secteur.
+ * @return array
+ */
 function getMedicamentPresenter($secteur) {
     try {
         $monPdo = connexionPDO();
@@ -31,6 +37,12 @@ function getMedicamentPresenter($secteur) {
     }
 }
 
+/**
+ * Récupère le nombre total de médicaments offerts par médicament pour un secteur.
+ *
+ * @param array $secteur Code du secteur.
+ * @return array
+ */
 function getMedicamentOffert($secteur) {
     try {
         $monPdo = connexionPDO();
@@ -156,6 +168,15 @@ function getMedicamentPresenterOuOffert($secteur) {
 }
 
 // Nouvelle fonction avec filtres
+/**
+ * Récupère les médicaments présentés ou offerts avec filtres facultatifs.
+ *
+ * @param array $secteur Code du secteur.
+ * @param string $dateDebut Date de début du filtre.
+ * @param string $dateFin Date de fin du filtre.
+ * @param string $medicament Code du médicament à filtrer.
+ * @return array
+ */
 function getMedicamentPresenterOuOffertFiltre($secteur, $dateDebut, $dateFin, $medicament) {
     try {
         $monPdo = connexionPDO();
@@ -269,6 +290,12 @@ function getMedicamentPresenterOuOffertFiltre($secteur, $dateDebut, $dateFin, $m
     }
 }
 
+/**
+ * Calcule le nombre total de présentations de médicaments pour un secteur.
+ *
+ * @param array $secteur Code du secteur.
+ * @return array
+ */
 function sommeMedicamentPresenter($secteur) {
     try {
         $monPdo = connexionPDO();
@@ -286,6 +313,12 @@ function sommeMedicamentPresenter($secteur) {
     }
 }
 
+/**
+ * Calcule la quantité totale de médicaments offerts pour un secteur.
+ *
+ * @param array $secteur Code du secteur.
+ * @return array
+ */
 function sommeMedicamentOffert($secteur) {
     try {
         $monPdo = connexionPDO();
@@ -305,6 +338,15 @@ function sommeMedicamentOffert($secteur) {
     }
 }
 
+/**
+ * Calcule le nombre de présentations de médicaments pour un secteur avec filtres.
+ *
+ * @param array $secteur Code du secteur.
+ * @param string $dateDebut Date de début du filtre.
+ * @param string $dateFin Date de fin du filtre.
+ * @param string $medicament Code du médicament à filtrer.
+ * @return array
+ */
 function sommeMedicamentPresenterFiltre($secteur, $dateDebut, $dateFin, $medicament) {
     $pdo = connexionPDO();
 
@@ -334,6 +376,15 @@ function sommeMedicamentPresenterFiltre($secteur, $dateDebut, $dateFin, $medicam
     return $stmt->fetchAll();
 }
 
+/**
+ * Calcule la quantité totale de médicaments offerts pour un secteur avec filtres.
+ *
+ * @param array $secteur Code du secteur.
+ * @param string $dateDebut Date de début du filtre.
+ * @param string $dateFin Date de fin du filtre.
+ * @param string $medicament Code du médicament à filtrer.
+ * @return array
+ */
 function sommeMedicamentOffertFiltre($secteur, $dateDebut, $dateFin, $medicament) {
     $pdo = connexionPDO();
 

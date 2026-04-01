@@ -2,6 +2,11 @@
 
 session_start();
 
+/**
+ * Crée et retourne une connexion PDO vers la base de données.
+ *
+ * @return PDO
+ */
 function connexionPDO() {
     $login = 'gsbv2025';
     $mdp = 'azerty123';

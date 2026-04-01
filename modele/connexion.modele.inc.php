@@ -2,6 +2,12 @@
 
 include_once 'bd.inc.php';
 
+/**
+ * Récupère les informations détaillées d'un compte collaborateur.
+ *
+ * @param string $matricule Le code matricule du collaborateur.
+ * @return array|false
+ */
 function getAllInformationCompte($matricule)
 {
 
@@ -18,6 +24,13 @@ function getAllInformationCompte($matricule)
     }
 }
 
+/**
+ * Vérifie les identifiants de connexion et retourne l'enregistrement de login.
+ *
+ * @param string $username Le login de l'utilisateur.
+ * @param string $mdp Le mot de passe en clair.
+ * @return array|false
+ */
 function checkConnexion($username, $mdp)
 {
 
@@ -35,6 +48,12 @@ function checkConnexion($username, $mdp)
     }
 }
 
+/**
+ * Vérifie si un matricule est déjà utilisé dans la table login.
+ *
+ * @param string $matricule Le matricule à vérifier.
+ * @return array|false
+ */
 function checkMatriculeInscription($matricule)
 {
 
@@ -52,6 +71,12 @@ function checkMatriculeInscription($matricule)
     }
 }
 
+/**
+ * Vérifie si un matricule existe dans la table collaborateur.
+ *
+ * @param string $matricule Le matricule à vérifier.
+ * @return array|false
+ */
 function checkMatricule($matricule)
 {
 
@@ -69,6 +94,12 @@ function checkMatricule($matricule)
     }
 }
 
+/**
+ * Vérifie si un nom d'utilisateur est déjà utilisé dans la table login.
+ *
+ * @param string $username Le nom d'utilisateur à vérifier.
+ * @return array|false
+ */
 function checkUserInscription($username)
 {
 
@@ -86,6 +117,11 @@ function checkUserInscription($username)
     }
 }
 
+/**
+ * Récupère tous les matricules des collaborateurs.
+ *
+ * @return array
+ */
 function getAllMatriculeCollaborateur()
 {
 
@@ -103,23 +139,13 @@ function getAllMatriculeCollaborateur()
     }
 }
 
-function getColMatricule()
-{
 
-    try {
 
-        $monPdo = connexionPDO();
-        $req = 'SELECT COL_MATRICULE FROM collaborateur ORDER BY COL_MATRICULE';
-        $res = $monPdo->query($req);
-        $result = $res->fetchAll();
-
-        return $result;
-    } catch (PDOException $e) {
-        print "Erreur !: " . $e->getMessage();
-        die();
-    }
-}
-
+/**
+ * Compte le nombre total de collaborateurs.
+ *
+ * @return array|false
+ */
 function getCountMatricule()
 {
 
