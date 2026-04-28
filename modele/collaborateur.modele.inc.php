@@ -29,7 +29,7 @@ include_once 'bd.inc.php';
      * @param int $id_log L'identifiant de login.
      * @return int|array
      */
-    function getDroit(int $id_log): int | array {
+    function getDroit(int $id_log){
         try {
             $getInfo = connexionPDO();
             $req = $getInfo->prepare('SELECT hab_id FROM login JOIN collaborateur ON collaborateur.COL_MATRICULE = login.COL_MATRICULE WHERE login.LOG_ID = ?');
