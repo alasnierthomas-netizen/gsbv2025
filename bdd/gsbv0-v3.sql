@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mar. 14 oct. 2025 à 08:28
+-- Généré le : mer. 06 mai 2026 à 15:17
 -- Version du serveur : 11.5.2-MariaDB
 -- Version de PHP : 8.3.14
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `gsbcr0`
+-- Base de données : `gsbv2025`
 --
 
 -- --------------------------------------------------------
@@ -570,6 +570,7 @@ CREATE TABLE IF NOT EXISTS `offrir` (
 
 INSERT INTO `offrir` (`MED_DEPOTLEGAL`, `RAP_NUM`, `COL_MATRICULE`, `OFF_QTE`) VALUES
 ('AMOXIG12', 1, 'a131', 3),
+('AMOXIG12', 2, 'a131', 1),
 ('CLAZER6', 2, 'a131', 2),
 ('EVILR7', 3, 'a131', 5);
 
